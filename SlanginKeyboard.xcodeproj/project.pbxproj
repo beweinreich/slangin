@@ -282,6 +282,7 @@
 					};
 					C31AD5341A22970A006EE3FF = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = CQ5H8UTC2K;
 					};
 				};
 			};
@@ -586,6 +587,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 505B157B76D9C193A529578A /* Pods-Slangin.debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Slangin",
@@ -597,6 +599,7 @@
 				INFOPLIST_FILE = Slangin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "9bdc95ac-0733-4399-aef4-c688681d6ab6";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -605,6 +608,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F150F330413F2422780D7012 /* Pods-Slangin.release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Slangin",
@@ -612,6 +616,7 @@
 				INFOPLIST_FILE = Slangin/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "d594a40e-1d0e-4298-83c9-4edf1d62ad5a";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
