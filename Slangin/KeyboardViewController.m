@@ -6,8 +6,10 @@
 //  Copyright (c) 2014 rounded. All rights reserved.
 //
 
-#define BUTTONWIDTH 27
-#define BUTTONHEIGHT 35
+#define BUTTONWIDTH 34
+#define BUTTONHEIGHT 42
+#define BUTTONMARGIN 7
+#define ROWMARGIN 10
 
 #import "KeyboardViewController.h"
 
@@ -80,21 +82,26 @@
     
     [self.nextKeyboardButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
     [self.nextKeyboardButton autoPinEdge:ALEdgeLeft toEdge:ALEdgeLeft ofView:self.view];
-    
-    [self.spaceBarButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
+
+    [self.spaceBarButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view withOffset:-BUTTONMARGIN];
     [self.spaceBarButton autoSetDimension:ALDimensionWidth toSize:5*BUTTONWIDTH];
     [self.spaceBarButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+    [self.spaceBarButton autoSetDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
 
     [self.deleteButton autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.row3View];
     [self.deleteButton autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.row3View];
-    [self.deleteButton autoPinEdge:ALEdgeRight toEdge:ALEdgeRight ofView:self.view];
-    
+    //    [self.deleteButton autoPinEdge:ALEdgeRight toEdge:ALEdgeRight ofView:self.view withOffset:-BUTTONMARGIN];
+    [self.deleteButton autoSetDimension:ALDimensionWidth toSize:48];
+    [self.deleteButton autoSetDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
+
     [self.shiftButton autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.row3View];
     [self.shiftButton autoPinEdge:ALEdgeRight toEdge:ALEdgeLeft ofView:self.row3View];
-    [self.shiftButton autoPinEdge:ALEdgeLeft toEdge:ALEdgeLeft ofView:self.view];
-    
+//    [self.shiftButton autoPinEdge:ALEdgeLeft toEdge:ALEdgeLeft ofView:self.view withOffset:BUTTONMARGIN];
+    [self.shiftButton autoSetDimension:ALDimensionWidth toSize:49];
+    [self.shiftButton autoSetDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
+
     // Row 1
-    [self.row1View autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(8, 0, 0, 0) excludingEdge:ALEdgeBottom];
+    [self.row1View autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(ROWMARGIN, 0, 0, 0) excludingEdge:ALEdgeBottom];
     [self.row1View autoSetDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
     
     [self.row1Buttons enumerateObjectsUsingBlock:^(UIButton *button, NSUInteger idx, BOOL *stop) {
@@ -104,10 +111,10 @@
     [self.row1Buttons autoSetViewsDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
 
     // Row 2
-    [self.row2View autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.row1View withOffset:8];
-    [self.row2View autoPinEdge:ALEdgeLeft toEdge:ALEdgeLeft ofView:self.view withOffset:(0.5*BUTTONWIDTH)];
-    [self.row2View autoPinEdge:ALEdgeRight toEdge:ALEdgeRight ofView:self.view withOffset:-(0.5*BUTTONWIDTH)];
+    [self.row2View autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.row1View withOffset:ROWMARGIN];
     [self.row2View autoSetDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
+    [self.row2View autoSetDimension:ALDimensionWidth toSize:340];
+    [self.row2View autoAlignAxisToSuperviewAxis:ALAxisVertical];
     
     [self.row2Buttons enumerateObjectsUsingBlock:^(UIButton *button, NSUInteger idx, BOOL *stop) {
         [button autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.row2View];
@@ -116,21 +123,32 @@
     [self.row2Buttons autoSetViewsDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
 
     // Row 3
-    [self.row3View autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.row2View withOffset:8];
-    [self.row3View autoPinEdge:ALEdgeLeft toEdge:ALEdgeLeft ofView:self.view withOffset:(1.5*BUTTONWIDTH)];
-    [self.row3View autoPinEdge:ALEdgeRight toEdge:ALEdgeRight ofView:self.view withOffset:-(1.5*BUTTONWIDTH)];
+    [self.row3View autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.row2View withOffset:ROWMARGIN];
     [self.row3View autoSetDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
+    [self.row3View autoSetDimension:ALDimensionWidth toSize:270];
+    [self.row3View autoAlignAxisToSuperviewAxis:ALAxisVertical];
     
     [self.row3Buttons enumerateObjectsUsingBlock:^(UIButton *button, NSUInteger idx, BOOL *stop) {
         [button autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:self.row3View];
     }];
     [self.row3Buttons autoDistributeViewsAlongAxis:ALAxisHorizontal alignedTo:ALAttributeTop withFixedSize:BUTTONWIDTH];
     [self.row3Buttons autoSetViewsDimension:ALDimensionHeight toSize:BUTTONHEIGHT];
+
 }
 
 # pragma mark - Actions
 
-- (void)keyPressed:(id)sender
+- (void)keyTouchDown:(id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    UIColor *previousColor = button.backgroundColor;
+    [button setBackgroundColor:[UIColor whiteColor]];
+//    [UIView animateWithDuration:1.0 animations:^{
+        [button setBackgroundColor:previousColor];
+//    }];
+}
+
+- (void)keyTouchUpInside:(id)sender
 {
     UIButton *button = (UIButton *)sender;
     NSString *title = button.titleLabel.text;
@@ -192,7 +210,8 @@
         [button setTitle:titles[idx] forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button setBackgroundColor:[self colors][self.currentColorIndex]];
-        [button addTarget:self action:@selector(keyPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(keyTouchDown:) forControlEvents:UIControlEventTouchDown];
+        [button addTarget:self action:@selector(keyTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
         button.layer.masksToBounds = YES;
         button.layer.cornerRadius = 3;
         button.translatesAutoresizingMaskIntoConstraints = FALSE;
